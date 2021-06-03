@@ -1,0 +1,30 @@
+<!--
+	IVY
+	
+	Copyright 2021 MicroEJ Corp. All rights reserved.
+	This library is provided in source code for use, modification and test, subject to license terms.
+	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+<ivy-module version="2.0" xmlns:ea="http://www.easyant.org" xmlns:ej="https://developer.microej.com" ej:version="2.0.0"> 
+	<info organisation="com.microej.clibrary.llimpl" module="mjvm-threadx" status="integration" revision="1.0.0">
+		<ea:build organisation="com.is2t.easyant.buildtypes" module="build-custom" revision="1.+">
+			<ea:plugin org="com.is2t.easyant.plugins" module="artifact-checker" revision="1.7.+"/>
+		</ea:build>
+		<ea:plugin org="com.is2t.easyant.plugins" module="clean-artifacts" revision="2.1.+" />
+	</info>
+	<configurations>
+		<conf name="default" visibility="public" description="runtime dependencies artifact can be used with this conf"/>
+		<conf name="provided" visibility="public" description="this is much like compile, but indicates you expect the JDK or a container to provide it. It is only available on the compilation classpath, and is not transitive."/>
+		<conf name="documentation" visibility="public" description="Documentation related to the artifact (javadoc, PDF)"/>
+		<conf name="source" visibility="public" description="Source code"/>
+		<conf name="test" visibility="private" description="this scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases."/>
+	</configurations>
+	
+	<publications>
+		<!-- keep this empty if no specific artifact to publish -->
+	</publications>
+	
+	<dependencies>
+		<!-- your project dependencies goes here -->
+	</dependencies>
+</ivy-module>

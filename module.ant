@@ -1,0 +1,32 @@
+<!--
+	Ivy
+	
+	Copyright 2020-2021 MicroEJ Corp. All rights reserved.
+	This library is provided in source code for use, modification and test, subject to license terms.
+	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+-->
+<project name="com.microej.clibrary.llimpl;mjvm-threadx" xmlns:ea="antlib:org.apache.easyant">
+
+	<ea:plugin module="phases-std" revision="0.9" />
+	
+	<!-- Launch artifact-checker plugin during packaging step -->
+	<target name="bind-artifact-checker-plugin" depends="artifact-checker:check-current-module" extensionOf="package"/> 
+	
+    <target name="mjvm-threadx:build" extensionOf="package">
+		<!-- Check if Doxygen @version value matched with module version -->
+	    <resourcecount property="count.success.checked.cfiles">
+	    	<fileset dir="${basedir}/src" includes="*.c">
+	    	    <contains text="@version ${ivy.revision}"/>
+	    	</fileset>
+    	</resourcecount>
+	    <resourcecount property="count.cfiles">
+    		<fileset dir="${basedir}/src" includes="*.c"/>
+    	</resourcecount>
+    	<fail message="Wrong pattern &quot;@version ${ivy.revision}&quot; in &quot;.c&quot; file(s) (${count.success.checked.cfiles}/${count.cfiles} OK).">
+    	    <condition>
+    	    	<not><equals arg1="${count.success.checked.cfiles}" arg2="${count.cfiles}"/></not>
+    	    </condition>
+    	</fail>
+    </target>
+
+</project>
