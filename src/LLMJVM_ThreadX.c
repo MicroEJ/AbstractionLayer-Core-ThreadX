@@ -1,16 +1,15 @@
 /*
  * C
  *
- * 	Copyright 2021 MicroEJ Corp. All rights reserved.
- * 	This library is provided in source code for use, modification and test, subject to license terms.
- * 	Any modification of the source code will break MicroEJ Corp. warranties on the whole library.
+ * Copyright 2021-2022 MicroEJ Corp. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be found with this software.
  */
 
 /**
  * @file
  * @brief LLMJVM implementation over ThreadX.
  * @author MicroEJ Developer Team
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 #include "misra_2004_conf.h"
@@ -27,10 +26,9 @@ MISRA_2004_ENABLE_ALL
 #define TIMER_NAME "schedule timer"
 #define TIMER_INITIAL_TICKS_U (0xFFFFFFFF)
 
-static int64_t application_time_offset = 0;
 static int64_t current_schedule_time = INT64_MAX;
-static TX_SEMAPHORE* idle_semaphore;
-static TX_TIMER* schedule_timer;
+static TX_SEMAPHORE idle_semaphore;
+static TX_TIMER schedule_timer;
 static void schedule_request_callback(ULONG param);
 
 /**
@@ -53,7 +51,7 @@ int32_t LLMJVM_IMPL_initialize(void){
 	UINT tx_result = (UINT) 0;
 
 	/* Create schedule timer */
-	tx_result = tx_timer_create(schedule_timer, (CHAR*) TIMER_NAME,
+	tx_result = tx_timer_create(&schedule_timer, (CHAR*) TIMER_NAME,
 			schedule_request_callback, (ULONG) 0, (ULONG) TIMER_INITIAL_TICKS_U, (ULONG) 0,
 			TX_NO_ACTIVATE);
 	if (TX_SUCCESS != tx_result) {
@@ -61,10 +59,12 @@ int32_t LLMJVM_IMPL_initialize(void){
 	}
 
 	/* Create schedule semaphore */
-	tx_result = tx_semaphore_create(idle_semaphore, SEMAPHORE_NAME, (ULONG) 1);
+	tx_result = tx_semaphore_create(&idle_semaphore, SEMAPHORE_NAME, (ULONG) 0);
 	if (TX_SUCCESS != tx_result) {
 		result = LLMJVM_ERROR;
 	}
+
+	microej_time_init();
 
 	return result;
 }
@@ -99,14 +99,14 @@ int32_t LLMJVM_IMPL_scheduleRequest(int64_t absoluteTime){
 		current_schedule_time = absoluteTime;
 
 		/* Stop the schedule timer */
-		tx_timer_deactivate(schedule_timer);
+		tx_timer_deactivate(&schedule_timer);
 
 		relative_time_milliseconds = absoluteTime - microej_time_get_current_time((uint8_t) 1);
 
 		if (0 < relative_time_milliseconds) {
 			/* Update the timer and launch it*/
-			tx_result = tx_timer_change(schedule_timer, (ULONG) microej_time_time_to_tick(relative_time_milliseconds), (ULONG) 1);
-			tx_timer_activate(schedule_timer);
+			tx_result = tx_timer_change(&schedule_timer, (ULONG) microej_time_time_to_tick(relative_time_milliseconds), (ULONG) 0);
+			tx_timer_activate(&schedule_timer);
 			if (TX_SUCCESS != tx_result) {
 				result = LLMJVM_ERROR;
 			}
@@ -130,7 +130,7 @@ int32_t LLMJVM_IMPL_idleVM(void){
 	UINT tx_result = (UINT) 0;
 
 	/* Try to take the idle semaphore */
-	tx_result = tx_semaphore_get(idle_semaphore, TX_WAIT_FOREVER);
+	tx_result = tx_semaphore_get(&idle_semaphore, TX_WAIT_FOREVER);
 	if (TX_SUCCESS != tx_result) {
 		result = LLMJVM_ERROR;
 	}
@@ -155,7 +155,7 @@ int32_t LLMJVM_IMPL_wakeupVM(void) {
 	current_schedule_time = INT64_MAX;
 
 	/* Release the semaphore */
-	tx_result = tx_semaphore_put(idle_semaphore);
+	tx_result = tx_semaphore_put(&idle_semaphore);
 	if (TX_SUCCESS != tx_result) {
 		result = LLMJVM_ERROR;
 	}
@@ -198,8 +198,7 @@ int32_t LLMJVM_IMPL_shutdown(void){
  * @param t the application time to set in milliseconds
  */
 void LLMJVM_IMPL_setApplicationTime(int64_t t){
-	int64_t current_time = microej_time_get_current_time((uint8_t) 0);
-	application_time_offset = t - current_time;
+	microej_time_set_application_time(t);
 }
 
 /**
