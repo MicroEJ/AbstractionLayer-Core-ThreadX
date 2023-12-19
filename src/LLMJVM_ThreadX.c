@@ -1,7 +1,7 @@
 /*
  * C
  *
- * Copyright 2021-2022 MicroEJ Corp. All rights reserved.
+ * Copyright 2021-2023 MicroEJ Corp. All rights reserved.
  * Use of this source code is governed by a BSD-style license that can be found with this software.
  */
 
@@ -9,22 +9,16 @@
  * @file
  * @brief LLMJVM implementation over ThreadX.
  * @author MicroEJ Developer Team
- * @version 1.1.0
+ * @version 1.2.0
  */
-
-#include "misra_2004_conf.h"
-
-MISRA_2004_DISABLE_ALL
+#include <assert.h>
 #include <LLMJVM_impl.h>
 
 #include "microej_time.h"
 #include "tx_api.h"
 #include "tx_semaphore.h"
-MISRA_2004_ENABLE_ALL
 
-#define SEMAPHORE_NAME "idle semaphore"
-#define TIMER_NAME "schedule timer"
-#define TIMER_INITIAL_TICKS_U (0xFFFFFFFF)
+#define TIMER_INITIAL_TICKS_U (0xFFFFFFFFU)
 
 static int64_t current_schedule_time = INT64_MAX;
 static TX_SEMAPHORE idle_semaphore;
@@ -38,28 +32,30 @@ static void schedule_request_callback(ULONG param);
  */
 static void schedule_request_callback(ULONG param) {
 	(void) param;
-	LLMJVM_schedule();
+	int32_t ret = LLMJVM_schedule();
+	assert(LLMJVM_OK == ret);
 }
 
 /**
  * This function is called once during MicroJvm virtual machine Startup. It may be used to initialize specific data.<br>
  * @return {@link LLMJVM_OK} on success, {@link LLMJVM_ERROR} on error.
  */
-MISRA_2004_DISABLE_RULE_10_6
 int32_t LLMJVM_IMPL_initialize(void){
 	int32_t result = LLMJVM_OK;
 	UINT tx_result = (UINT) 0;
+	static CHAR* timer_name = "schedule timer";
+	static CHAR* semaphore_name = "idle semaphore";
 
 	/* Create schedule timer */
-	tx_result = tx_timer_create(&schedule_timer, (CHAR*) TIMER_NAME,
-			schedule_request_callback, (ULONG) 0, (ULONG) TIMER_INITIAL_TICKS_U, (ULONG) 0,
+	tx_result = tx_timer_create(&schedule_timer, timer_name,
+			schedule_request_callback, (ULONG) 0U, (ULONG) TIMER_INITIAL_TICKS_U, (ULONG) 0U,
 			TX_NO_ACTIVATE);
 	if (TX_SUCCESS != tx_result) {
 		result = LLMJVM_ERROR;
 	}
 
 	/* Create schedule semaphore */
-	tx_result = tx_semaphore_create(&idle_semaphore, SEMAPHORE_NAME, (ULONG) 0);
+	tx_result = tx_semaphore_create(&idle_semaphore, semaphore_name, (ULONG) 0);
 	if (TX_SUCCESS != tx_result) {
 		result = LLMJVM_ERROR;
 	}
@@ -68,7 +64,6 @@ int32_t LLMJVM_IMPL_initialize(void){
 
 	return result;
 }
-MISRA_2004_ENABLE_ALL
 
 /**
  * This function is called once during the MicroJvm virtual machine initialization by the MicroJvm virtual machine task.
@@ -177,11 +172,9 @@ int32_t LLMJVM_IMPL_ackWakeup(void){
 /**
  * Returns the ID of the current task.
  */
-MISRA_2004_DISABLE_RULE_11_3
 int32_t LLMJVM_IMPL_getCurrentTaskID(void){
 	return (int32_t) tx_thread_identify();
 }
-MISRA_2004_ENABLE_ALL
 
 /**
  * This function is called during MicroJvm virtual machine end. It may be used to freed specific data.<br>
@@ -208,11 +201,9 @@ void LLMJVM_IMPL_setApplicationTime(int64_t t){
  * The application time is the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
  * @param system if 1, get the system time, otherwise get the application time.
  */
-MISRA_2004_DISABLE_RULE_16_4
 int64_t LLMJVM_IMPL_getCurrentTime(uint8_t sys){
 	return microej_time_get_current_time(sys);
 }
-MISRA_2004_ENABLE_ALL
 
 /**
  * Gets the current timestamp in nanoseconds.

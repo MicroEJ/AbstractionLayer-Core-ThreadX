@@ -1,3 +1,7 @@
+![SDK](https://shields.microej.com/endpoint?url=https://repository.microej.com/packages/badges/sdk_5.7.json)
+![ARCH](https://shields.microej.com/endpoint?url=https://repository.microej.com/packages/badges/arch_7.18.json)
+
+
 # Overview
 
 Low Level MicroEJ Core Engine API implementation over ThreadX.
@@ -34,19 +38,22 @@ This Abstraction Layer implementation can be validated in the target Board Suppo
 Here is a non exhaustive list of tested environments:
 - Hardware
   - STMicroelectronics STM32F746-DISCOVERY
+  - STMicroelectronics STM32U5G9J-DK2
 - Compilers / development environments:
   - IAR Embedded Workbench 8.50.6
+  - IAR Embedded Workbench 9.30.1
 - ThreadX / Azure RTOS versions:
   - 6.1
+  - 6.2
 
 ## MISRA Compliance
 
 The implementation is MISRA-compliant (MISRA C 2004) with the following observed deviations:
+
 | Deviation | Category |                                                 Justification                                                 |
 |:---------:|:--------:|:-------------------------------------------------------------------------------------------------------------:|
-| Rule 6.3  | Advisory |             A deviation from this rule is applied so as to use the bool type from `<stdbool.h>`.              |
-| Rule 11.3 | Advisory | A deviation from this rule is unavoidable as ThreadX's handles (timers, queues, tasks) are pointers to void. | 
-  
+| None      | None     | None                                                                                                          |
+
 
 # Dependencies
 
@@ -64,5 +71,5 @@ None.
 
 ---
 
-_Copyright 2021-2022 MicroEJ Corp. All rights reserved._
+_Copyright 2021-2023 MicroEJ Corp. All rights reserved._
 _Use of this source code is governed by a BSD-style license that can be found with this software._

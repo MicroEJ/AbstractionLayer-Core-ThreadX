@@ -1,15 +1,16 @@
 <!--
 	IVY
 	
-	Copyright 2021-2022 MicroEJ Corp. All rights reserved.
+	Copyright 2021-2023 MicroEJ Corp. All rights reserved.
 	Use of this source code is governed by a BSD-style license that can be found with this software.
 -->
 <ivy-module version="2.0" xmlns:ea="http://www.easyant.org" xmlns:ej="https://developer.microej.com" ej:version="2.0.0"> 
-	<info organisation="com.microej.clibrary.llimpl" module="mjvm-threadx" status="integration" revision="1.1.0">
-		<ea:build organisation="com.is2t.easyant.buildtypes" module="build-custom" revision="1.+">
-			<ea:plugin org="com.is2t.easyant.plugins" module="artifact-checker" revision="1.7.+"/>
-		</ea:build>
-		<ea:plugin org="com.is2t.easyant.plugins" module="clean-artifacts" revision="2.1.+" />
+    <info organisation="com.microej.clibrary.llimpl" module="mjvm-threadx" status="integration" revision="1.2.0">
+        <ea:build organisation="com.is2t.easyant.buildtypes" module="build-microej-ccomponent" revision="2.3.+">
+        </ea:build>
+        <ea:plugin org="com.is2t.easyant.plugins" module="clean-artifacts" revision="3.0.+" />
+        <ea:property name="ccomponent.category" value="core"/>
+        <ea:property name="skip.test" value="set"/>
 	</info>
 	<configurations>
 		<conf name="default" visibility="public" description="runtime dependencies artifact can be used with this conf"/>
