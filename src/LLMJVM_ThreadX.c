@@ -9,7 +9,7 @@
  * @file
  * @brief LLMJVM implementation over ThreadX.
  * @author MicroEJ Developer Team
- * @version 1.2.0
+ * @version 1.2.1
  */
 #include <assert.h>
 #include <LLMJVM_impl.h>

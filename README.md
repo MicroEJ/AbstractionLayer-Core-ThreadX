@@ -48,7 +48,8 @@ Here is a non exhaustive list of tested environments:
 
 ## MISRA Compliance
 
-The implementation is MISRA-compliant (MISRA C 2004) with the following observed deviations:
+This Abstraction Layer implementation is MISRA-compliant (MISRA C:2012) with some noted exception.
+It has been verified with Cppcheck v2.10. Here is the list of deviations from MISRA standard:
 
 | Deviation | Category |                                                 Justification                                                 |
 |:---------:|:--------:|:-------------------------------------------------------------------------------------------------------------:|
