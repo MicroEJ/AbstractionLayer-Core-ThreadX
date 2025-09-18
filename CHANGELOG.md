@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2025-09-18
+
+### Fixed
+
+- Fix typo in README.
+
+## [1.2.2] - 2025-09-18
+
+### Changed
+
+- Update `LLMJVM_IMPL_ackWakeup` to cancel the current schedule request.
+- Update `LLMJVM_IMPL_ackWakeup` to ensure that the next call to `LLMJVM_IMPL_idleVM` is blocking.
+- Update code formatting using Uncrustify.
+- Update the module structure to match the version 1.0.0 of the C module Template.
+
 ## [1.2.1] - 2023-12-20
 
 ### Fixed
@@ -40,6 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-_Copyright 2021-2023 MicroEJ Corp. All rights reserved._
+_Copyright 2021-2025 MicroEJ Corp. All rights reserved._
 _Use of this source code is governed by a BSD-style license that can be found with this software._
 
