@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2026-10-08
+
+### Changed
+
+- Add a title to the README.
+
+### Fixed
+
+- Return an error from `LLMJVM_IMPL_scheduleRequest()` when the schedule timer cannot be activated.
+- Fix the MISRA C:2012 findings of the cppcheck analysis.
+- Run the Uncrustify and cppcheck checks in the CI build.
+
 ## [1.2.3] - 2025-09-18
 
 ### Fixed
@@ -55,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-_Copyright 2021-2025 MicroEJ Corp. All rights reserved._
+_Copyright 2021-2026 MicroEJ Corp. All rights reserved._
 _Use of this source code is governed by a BSD-style license that can be found with this software._
+_Build: 7E4D1F7C_
 

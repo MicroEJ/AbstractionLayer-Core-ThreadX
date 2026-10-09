@@ -1,15 +1,17 @@
 /*
  * C
  *
- * Copyright 2021-2025 MicroEJ Corp. All rights reserved.
+ * Copyright 2021-2026 MicroEJ Corp. All rights reserved.
  * Use of this source code is governed by a BSD-style license that can be found with this software.
+ *
+ * Build: 7E4D1F7C
  */
 
 /**
  * @file
  * @brief LLMJVM implementation over ThreadX.
  * @author MicroEJ Developer Team
- * @version 1.2.3
+ * @version 1.2.4
  */
 
 // -----------------------------------------------------------------------------
@@ -64,8 +66,9 @@ static void schedule_request_callback(ULONG param) {
 int32_t LLMJVM_IMPL_initialize(void) {
 	int32_t result = LLMJVM_OK;
 	UINT tx_result = (UINT)0;
-	static CHAR *timer_name = "schedule timer";
-	static CHAR *semaphore_name = "idle semaphore";
+	/* ThreadX takes the names as non-const CHAR *. */
+	static CHAR timer_name[] = "schedule timer";
+	static CHAR semaphore_name[] = "idle semaphore";
 
 	/* Create schedule timer */
 	tx_result = tx_timer_create(&schedule_timer, timer_name,
@@ -116,7 +119,9 @@ int32_t LLMJVM_IMPL_scheduleRequest(int64_t absoluteTime) {
 				tx_result = tx_timer_change(&schedule_timer,
 				                            (ULONG)microej_time_time_to_tick(relative_time_milliseconds),
 				                            (ULONG)0);
-				tx_timer_activate(&schedule_timer);
+				if (TX_SUCCESS == tx_result) {
+					tx_result = tx_timer_activate(&schedule_timer);
+				}
 				if (TX_SUCCESS != tx_result) {
 					result = LLMJVM_ERROR;
 				}

@@ -1,5 +1,6 @@
 ![ARCH](https://shields.microej.com/endpoint?url=https://repository.microej.com/packages/badges/arch_8.3.json)
 
+# Abstraction Layer for the MicroEJ Core Engine over ThreadX
 
 # Overview
 
@@ -47,12 +48,15 @@ Here is a non exhaustive list of tested environments:
 ## MISRA Compliance
 
 This Abstraction Layer implementation is MISRA-compliant (MISRA C:2012) with some noted exception.
-It has been verified with Cppcheck v2.13. Here is the list of deviations from MISRA standard:
+It has been verified with Cppcheck v2.19. Here is the list of deviations from MISRA standard:
 
 | Deviation | Category |                                                 Justification                                                 |
 |:---------:|:--------:|:-------------------------------------------------------------------------------------------------------------:|
 |  Rule 5.5 | Required | Intentional usage of macros to define native functions.                                                       |
+|  Rule 7.4 | Required | ThreadX takes the object names as non-const `CHAR *`: the names are `CHAR` arrays initialized from a string literal, so no pointer to the literal exists. |
 |  Rule 8.4 | Required | A compatible declaration is defined in headers provided by the VEE Port.                                      |
+|  Rule 8.7 | Advisory | The `LLMJVM_IMPL_*` functions are the LLAPI of the Core Engine. Only the Core Engine calls them, and the analysis does not see it. |
+| Rule 11.4 | Advisory | `LLMJVM_IMPL_getCurrentTaskID()` returns the address of the ThreadX thread control block as the `int32_t` task identifier of the LLAPI. |
 
 
 # Dependencies
@@ -71,5 +75,6 @@ None.
 
 ---
 
-_Copyright 2021-2025 MicroEJ Corp. All rights reserved._
+_Copyright 2021-2026 MicroEJ Corp. All rights reserved._
 _Use of this source code is governed by a BSD-style license that can be found with this software._
+_Build: 7E4D1F7C_
